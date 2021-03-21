@@ -6,6 +6,7 @@ import { geStackExchanegeData } from "./actions";
 import NavBar from "../../components/NavBar";
 import { authenticateUserAction } from "../Login/actions";
 import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
 
 import DatePicker from "react-datepicker";
 
@@ -49,6 +50,7 @@ const Home = () => {
   const [pageNumber, setPageNumber] = useState();
   const [pageSize, setPageSize] = useState();
   const [isError, setIsError] = useState(false);
+
   const onChange = (dates) => {
     setIsError(false);
     const [start, end] = dates;
@@ -57,11 +59,7 @@ const Home = () => {
   };
   const currentStateData = useSelector((state) => state?.homeData?.data);
   console.log(currentStateData, "..currentStateData");
-  const logout = () => {
-    dispatch(authenticateUserAction(false));
-  };
   const getPageSizes = (value, name) => {
-    console.log(value, ".......value...", name);
     setIsError(false);
 
     if (name === "size") {
@@ -71,7 +69,6 @@ const Home = () => {
     }
   };
   const dateConversion = (date) => {
-    debugger;
     const newFormat = {
       mm: date.getMonth() + 1,
       dd: date.getDate(),
@@ -94,22 +91,25 @@ const Home = () => {
     ) {
       const newStartDate = dateConversion(startDate);
       const newEndDate = dateConversion(endDate);
-      debugger;
       dispatch(
         geStackExchanegeData(newStartDate, newEndDate, pageSize, pageNumber)
       );
     } else {
-      setIsError(true);
+      toast.dismiss();
+      toast.error("Please fill all the details.", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
+
   return (
     <React.Fragment>
-      {/* <NavBar
-        logout={logout}
-        heading={"Zolve"}
-        buttonName={"Logout"}
-        buttonClass="btn btn-primary"
-      /> */}
       <Container>
         <TopWrapper>
           <div className="form-group">

@@ -6,6 +6,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { authenticateUserAction } from "../Login/actions";
 import styled from "styled-components";
+import { ToastContainer, toast } from "react-toastify";
 
 const StyledLabel = styled.label`
   text-align: left;
@@ -31,17 +32,30 @@ class Login extends React.Component {
         localStorage.getItem("email") === null &&
         localStorage.getItem("password") === null
       )
-        return alert("not registered please registered first");
+        return this.toastVisible("not registered please registered first");
       else if (localStorage.getItem("email") !== fields.email)
-        return alert("email not matched");
+        return this.toastVisible("email not matched");
       else if (localStorage.getItem("password") !== fields.password)
-        return alert("password not matched");
+        return this.toastVisible("password not matched");
       else {
         this.props.authenticateUserAction(true);
         this.props.history.push("/home");
       }
     };
   }
+
+  toastVisible = (message) => {
+    toast.dismiss();
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
   render() {
     return (

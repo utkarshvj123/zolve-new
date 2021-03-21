@@ -7,11 +7,11 @@ const CopyClip = (props) => {
   const match = search.match(/q=(.*)/);
   const type = match?.[1];
   const textAreaRef = useRef(null);
-  console.log(match, ".......useParams.....", type, "........//....");
   function copyToClipboard(e) {
     textAreaRef.current.select();
     document.execCommand("copy");
     e.target.focus();
+    toast.dismiss();
     toast.success("Great job! Copied.", {
       position: "top-right",
       autoClose: 1800,

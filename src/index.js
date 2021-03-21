@@ -26,7 +26,6 @@ const store = createStore(
 ReactDOM.render(
   <Provider store={store}>
     <ToastContainer />
-
     <App />
   </Provider>,
   document.getElementById("root")
