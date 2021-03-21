@@ -1,6 +1,5 @@
 import { GET_DATA } from "../../Home/actions";
 import data from "../../../constants/data.json";
-import { filteringString } from "../../../constants/globalFunction";
 
 export const IS_VALID_USER = "IS_VALID_USER";
 
