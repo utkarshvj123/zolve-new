@@ -58,10 +58,9 @@ const Home = () => {
     setEndDate(end);
   };
   const currentStateData = useSelector((state) => state?.homeData?.data);
-  console.log(currentStateData, "..currentStateData");
+  console.log(currentStateData?.dataSource?.data.length, "..currentStateData");
   const getPageSizes = (value, name) => {
     setIsError(false);
-
     if (name === "size") {
       setPageSize(value);
     } else if (name === "pageNumber") {
@@ -93,19 +92,26 @@ const Home = () => {
       const newEndDate = dateConversion(endDate);
       dispatch(
         geStackExchanegeData(newStartDate, newEndDate, pageSize, pageNumber)
-      );
-    } else {
-      toast.dismiss();
-      toast.error("Please fill all the details.", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+      ).then((res) => {
+        if (res?.data?.items.length === 0) {
+          setIsError(true);
+        }
       });
+    } else {
+      toastMessage("error", "Please fill all the details.");
     }
+  };
+  const toastMessage = (toastType, message) => {
+    toast.dismiss();
+    toast[toastType](message, {
+      position: "top-right",
+      autoClose: 1800,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -151,17 +157,23 @@ const Home = () => {
           </div>
         </TopWrapper>
         <div>
-          {isError && (
-            <ErrorClass>Please fill all details before submit.</ErrorClass>
-          )}
           <button className="btn btn-primary" onClick={filteredData}>
             Filter
           </button>
         </div>
-        {Object.keys(currentStateData).length > 0 && (
-          <div style={{ margin: "50px 0px" }}>
-            <ReactFC {...currentStateData} />
-          </div>
+        {Object.keys(currentStateData).length > 0 &&
+          currentStateData?.dataSource?.data.length > 0 && (
+            <div style={{ margin: "50px 0px" }}>
+              <ReactFC {...currentStateData} />
+            </div>
+          )}
+        {isError && (
+          <>
+            {toastMessage(
+              "warn",
+              "No data found. Please fill the detail again"
+            )}
+          </>
         )}
       </Container>
     </React.Fragment>

@@ -1,7 +1,7 @@
 export const requiredData = (array) => {
   array.forEach((object) => {
     if (object.name || object.count) {
-      object["label"] = object.name;
+      object["label"] = capitalizeFirstLetter(object.name);
       object["value"] = object.count;
     }
   });
@@ -23,3 +23,15 @@ export const requiredData = (array) => {
     },
   };
 };
+
+function capitalizeFirstLetter(string) {
+  var b = string.split("-");
+  let newString;
+  if (b === -1) {
+    newString = string;
+  } else {
+    let c = b.join(" ");
+    newString = c;
+  }
+  return newString.charAt(0).toUpperCase() + newString.slice(1);
+}
