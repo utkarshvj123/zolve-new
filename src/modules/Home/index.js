@@ -55,9 +55,6 @@ const Home = () => {
     setStartDate(start);
     setEndDate(end);
   };
-  // useEffect(() => {
-  //   dispatch(geStackExchanegeData());
-  // }, []);
   const currentStateData = useSelector((state) => state?.homeData?.data);
   console.log(currentStateData, "..currentStateData");
   const logout = () => {
@@ -107,12 +104,12 @@ const Home = () => {
   };
   return (
     <React.Fragment>
-      <NavBar
+      {/* <NavBar
         logout={logout}
         heading={"Zolve"}
         buttonName={"Logout"}
         buttonClass="btn btn-primary"
-      />
+      /> */}
       <Container>
         <TopWrapper>
           <div className="form-group">

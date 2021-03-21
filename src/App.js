@@ -18,7 +18,7 @@ function App(props) {
       <Router>
         <Switch>
           <Route exact={true} path="/login" component={LandingPage} />
-          <AuthRoute isValidUser={true} />
+          <AuthRoute isValidUser={props.isValidUser} />
           <Route
             path="/"
             render={() => <Redirect from="/" to="/login" />}
