@@ -50,6 +50,7 @@ const Home = () => {
   const [pageNumber, setPageNumber] = useState();
   const [pageSize, setPageSize] = useState();
   const [isError, setIsError] = useState(false);
+  const [loadingState, setLoadingState] = useState(false);
 
   const onChange = (dates) => {
     setIsError(false);
@@ -58,7 +59,6 @@ const Home = () => {
     setEndDate(end);
   };
   const currentStateData = useSelector((state) => state?.homeData?.data);
-  console.log(currentStateData?.dataSource?.data.length, "..currentStateData");
   const getPageSizes = (value, name) => {
     setIsError(false);
     if (name === "size") {
@@ -80,7 +80,6 @@ const Home = () => {
     return newFormat2;
   };
   const filteredData = () => {
-    console.log(startDate, "....startDate...", endDate);
     if (
       endDate !== null &&
       pageNumber !== undefined &&
@@ -88,11 +87,13 @@ const Home = () => {
       pageSize !== undefined &&
       pageSize !== ""
     ) {
+      setLoadingState(true);
       const newStartDate = dateConversion(startDate);
       const newEndDate = dateConversion(endDate);
       dispatch(
         geStackExchanegeData(newStartDate, newEndDate, pageSize, pageNumber)
       ).then((res) => {
+        setLoadingState(false);
         if (res?.data?.items.length === 0) {
           setIsError(true);
         }
@@ -117,63 +118,69 @@ const Home = () => {
   return (
     <React.Fragment>
       <Container>
-        <TopWrapper>
-          <div className="form-group">
-            <label>Start & End Date</label>
-            <DatePicker
-              selected={startDate}
-              onChange={onChange}
-              startDate={startDate}
-              endDate={endDate}
-              selectsRange
-              inline
-            />
-          </div>
-          <div className="form-group">
-            <label>Page number</label>
-            <input
-              className="form-control"
-              type="text"
-              id="input2"
-              name="pageNumber"
-              placeholder="Page number"
-              value={pageNumber}
-              onChange={(event) =>
-                getPageSizes(event.target.value, "pageNumber")
-              }
-            />
-          </div>
-          <div className="form-group">
-            <label>Page Size</label>
-            <input
-              className="form-control"
-              type="text"
-              id="input1"
-              name="size"
-              placeholder="Page Size"
-              value={pageSize}
-              onChange={(event) => getPageSizes(event.target.value, "size")}
-            />
-          </div>
-        </TopWrapper>
-        <div>
-          <button className="btn btn-primary" onClick={filteredData}>
-            Filter
-          </button>
-        </div>
-        {Object.keys(currentStateData).length > 0 &&
-          currentStateData?.dataSource?.data.length > 0 && (
-            <div style={{ margin: "50px 0px" }}>
-              <ReactFC {...currentStateData} />
-            </div>
-          )}
-        {isError && (
+        {!loadingState ? (
           <>
-            {toastMessage(
-              "warn",
-              "No data found. Please fill the detail again"
+            <TopWrapper>
+              <div className="form-group">
+                <label>Start & End Date</label>
+                <DatePicker
+                  selected={startDate}
+                  onChange={onChange}
+                  startDate={startDate}
+                  endDate={endDate}
+                  selectsRange
+                  inline
+                />
+              </div>
+              <div className="form-group">
+                <label>Page number</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="input2"
+                  name="pageNumber"
+                  placeholder="Page number"
+                  value={pageNumber}
+                  onChange={(event) =>
+                    getPageSizes(event.target.value, "pageNumber")
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label>Page Size</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="input1"
+                  name="size"
+                  placeholder="Page Size"
+                  value={pageSize}
+                  onChange={(event) => getPageSizes(event.target.value, "size")}
+                />
+              </div>
+            </TopWrapper>
+            <div>
+              <button className="btn btn-primary" onClick={filteredData}>
+                Filter
+              </button>
+            </div>
+            {Object.keys(currentStateData).length > 0 &&
+              currentStateData?.dataSource?.data.length > 0 && (
+                <div style={{ margin: "50px 0px" }}>
+                  <ReactFC {...currentStateData} />
+                </div>
+              )}
+            {isError && (
+              <>
+                {toastMessage(
+                  "warn",
+                  "No data found. Please fill the detail again"
+                )}
+              </>
             )}
           </>
+        ) : (
+          <div>loading...</div>
         )}
       </Container>
     </React.Fragment>

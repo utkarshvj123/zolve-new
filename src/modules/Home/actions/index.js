@@ -16,7 +16,6 @@ export const geStackExchanegeData = (
     const newUrl = `${URL}page=${pageNumber}&pagesize=${pageSize}&fromdate=${newStartDate}&todate=${newEndDate}&order=desc&sort=popular&site=stackoverflow`;
     const response = await axios.get(newUrl);
     if (response?.status === 200) {
-      console.log(response, ".....response");
       dispatch({
         type: GET_DATA,
         payload: requiredData(response?.data?.items),
