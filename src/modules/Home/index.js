@@ -21,15 +21,6 @@ ReactFC.fcRoot(FusionCharts, Charts, FusionTheme);
 const Container = styled.div`
   margin-top: 100px;
 `;
-const ErrorClass = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  color: red;
-  font-size: small;
-  font-weight: 600;
-`;
 
 const TopWrapper = styled.div`
   display: flex;
@@ -93,9 +84,13 @@ const Home = () => {
       dispatch(
         geStackExchanegeData(newStartDate, newEndDate, pageSize, pageNumber)
       ).then((res) => {
+        toast.dismiss();
+
         setLoadingState(false);
         if (res?.data?.items.length === 0) {
           setIsError(true);
+        } else {
+          toastMessage("success", "Data successfully fetched.");
         }
       });
     } else {
